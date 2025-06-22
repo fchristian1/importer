@@ -31,6 +31,7 @@ function Layout() {
         { to: '/data/cleanup', label: 'Cleanup' },
       ]
     : [
+
         { to: '/', label: 'Übersicht', end: true },
         { to: '/import', label: 'Import' },
         { to: '/mapping', label: 'Mapping' },
@@ -71,6 +72,7 @@ function Layout() {
           <Routes>
             <Route path="/" element={<ImportOverviewPage />} />
             <Route path="/import" element={<ImportPage />} />
+
             <Route path="/mapping" element={<MappingPage />} />
             <Route path="/transform" element={<TransformPage />} />
             <Route path="/upload" element={<UploadPage />} />
