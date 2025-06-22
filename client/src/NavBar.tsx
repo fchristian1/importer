@@ -26,16 +26,7 @@ function NavBar({ onToggle }: NavBarProps) {
             Import
           </NavLink>
         </li>
-        <li>
-          <NavLink to="/mapping" className={linkStyle}>
-            Mapping
-          </NavLink>
-        </li>
-        <li>
-          <NavLink to="/transform" className={linkStyle}>
-            Transform
-          </NavLink>
-        </li>
+        
       </ul>
     </nav>
   );
