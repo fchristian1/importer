@@ -26,7 +26,12 @@ function NavBar({ onToggle }: NavBarProps) {
             Import
           </NavLink>
         </li>
-        
+        <li>
+          <NavLink to="/data" className={linkStyle}>
+            Data
+          </NavLink>
+        </li>
+
       </ul>
     </nav>
   );
