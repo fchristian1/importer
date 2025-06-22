@@ -1,11 +1,22 @@
 
-function NavBar() {
+interface NavBarProps {
+  onToggle: () => void;
+}
+
+function NavBar({ onToggle }: NavBarProps) {
   return (
-    <nav className="bg-gray-800 text-white p-4">
-      <ul className="flex space-x-4">
+    <nav className="bg-amber-200 border-b border-amber-300 p-4 rounded-b-lg">
+      <ul className="flex items-center space-x-4">
         <li>
-          <a href="#" className="font-semibold hover:underline">Importer</a>
+          <button
+            type="button"
+            onClick={onToggle}
+            className="bg-gray-200 border border-gray-300 px-2 py-1 rounded"
+          >
+            ☰
+          </button>
         </li>
+        <li className="font-semibold">Importer</li>
       </ul>
     </nav>
   );
