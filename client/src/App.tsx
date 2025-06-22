@@ -3,6 +3,7 @@ import { read, utils } from 'xlsx';
 import Papa from 'papaparse';
 import './App.css';
 import './index.css';
+import NavBar from './NavBar';
 import type { RawData, Mapping, Transformations } from './types';
 const Step = {
   Upload: 0,
@@ -59,7 +60,9 @@ function App() {
   };
 
   return (
-    <div className="p-4 max-w-4xl mx-auto">
+    <>
+      <NavBar />
+      <div className="p-4 max-w-4xl mx-auto">
       {step === Step.Upload && (
         <div className="space-y-4">
           <h1 className="text-xl font-bold">Step 1: Datei auswählen</h1>
@@ -139,6 +142,7 @@ function App() {
         </div>
       )}
     </div>
+    </>
   );
 }
 
