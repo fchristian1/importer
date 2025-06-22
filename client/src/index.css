@@ -1,6 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+.bg-menu {
+  @apply bg-gray-200
+}
+.bg-navitem {
+  @apply bg-amber-200 cursor-pointer
+}
+body {
+  @apply overflow-hidden;
+}
 
 html,
 body,
@@ -8,6 +16,4 @@ body,
   height: 100%;
 }
 
-body {
-  @apply overflow-hidden;
-}
+

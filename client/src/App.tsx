@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { read, utils } from 'xlsx';
 import Papa from 'papaparse';
-import './App.css';
 import './index.css';
 import NavBar from './NavBar';
 import type { RawData, Mapping, Transformations } from './types';
