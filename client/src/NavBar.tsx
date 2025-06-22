@@ -1,9 +1,13 @@
+import { NavLink } from 'react-router-dom';
 
 interface NavBarProps {
   onToggle: () => void;
 }
 
 function NavBar({ onToggle }: NavBarProps) {
+  const linkStyle = ({ isActive }: { isActive: boolean }) =>
+    `bg-navitem border border-gray-300 px-2 py-1 rounded ${isActive ? 'font-bold' : ''}`;
+
   return (
     <nav className="bg-menu border-b border-gray-400 p-4">
       <ul className="flex items-center space-x-4">
@@ -18,19 +22,19 @@ function NavBar({ onToggle }: NavBarProps) {
         </li>
         <li className="font-semibold">Importer</li>
         <li>
-          <button className="bg-navitem border border-gray-300 px-2 py-1 rounded">
-            Upload
-          </button>
+          <NavLink to="/" end className={linkStyle}>
+            Import
+          </NavLink>
         </li>
         <li>
-          <button className="bg-navitem border border-gray-300 px-2 py-1 rounded">
+          <NavLink to="/mapping" className={linkStyle}>
             Mapping
-          </button>
+          </NavLink>
         </li>
         <li>
-          <button className="bg-navitem border border-gray-300 px-2 py-1 rounded">
+          <NavLink to="/transform" className={linkStyle}>
             Transform
-          </button>
+          </NavLink>
         </li>
       </ul>
     </nav>
