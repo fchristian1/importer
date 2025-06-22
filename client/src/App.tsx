@@ -19,6 +19,7 @@ function App() {
   const [table, setTable] = useState<string[][]>([]);
   const [mapping, setMapping] = useState<Record<string, string>>({});
   const [rules, setRules] = useState<Record<string, string>>({});
+  const [collapsed, setCollapsed] = useState(false);
 
   const handleFile = async (file: File) => {
     setFileName(file.name);
@@ -60,15 +61,27 @@ function App() {
   };
 
   return (
-    <>
-      <NavBar />
-      <div className="p-4 max-w-4xl mx-auto">
-      {step === Step.Upload && (
-        <div className="space-y-4">
-          <h1 className="text-xl font-bold">Step 1: Datei auswählen</h1>
-          <input type="file" accept=".csv,.xls,.xlsx,.xlsm" onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
-        </div>
-      )}
+    <div className="flex flex-col h-full">
+      <NavBar onToggle={() => setCollapsed(!collapsed)} />
+      <div className="flex flex-1 overflow-hidden">
+        <aside
+          className={`bg-gray-200 border-r border-gray-400 p-4 transition-all duration-300 overflow-auto ${
+            collapsed ? 'w-0' : 'w-64'
+          }`}
+        >
+          <p className="font-semibold mb-2">Menü</p>
+          <ul className="space-y-2">
+            <li className="rounded border border-gray-300 bg-amber-200 p-2 text-sm">Item 1</li>
+            <li className="rounded border border-gray-300 bg-amber-200 p-2 text-sm">Item 2</li>
+          </ul>
+        </aside>
+        <main className="flex-1 overflow-auto p-4">
+        {step === Step.Upload && (
+          <div className="space-y-4">
+            <h1 className="text-xl font-bold">Step 1: Datei auswählen</h1>
+            <input type="file" accept=".csv,.xls,.xlsx,.xlsm" onChange={e => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+          </div>
+        )}
       {step === Step.Mapping && (
         <div className="space-y-4">
           <h1 className="text-xl font-bold">Step 2: Mapping</h1>
@@ -141,8 +154,10 @@ function App() {
           <p>Die JSON-Daten wurden in der Konsole ausgegeben.</p>
         </div>
       )}
+      </main>
+      </div>
+      <footer className="bg-gray-200 border-t border-gray-400 p-2 text-sm">Statusleiste</footer>
     </div>
-    </>
   );
 }
 
