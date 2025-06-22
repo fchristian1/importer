@@ -65,14 +65,14 @@ function App() {
       <NavBar onToggle={() => setCollapsed(!collapsed)} />
       <div className="flex flex-1 overflow-hidden">
         <aside
-          className={`bg-gray-200 border-r border-gray-400 p-4 transition-all duration-300 overflow-auto ${
+          className={`bg-menu border-r border-gray-400 p-4 transition-all duration-300 overflow-auto ${
             collapsed ? 'w-0' : 'w-64'
           }`}
         >
           <p className="font-semibold mb-2">Menü</p>
           <ul className="space-y-2">
-            <li className="rounded border border-gray-300 bg-amber-200 p-2 text-sm">Item 1</li>
-            <li className="rounded border border-gray-300 bg-amber-200 p-2 text-sm">Item 2</li>
+            <li className="rounded border border-gray-300 bg-navitem p-2 text-sm">Item 1</li>
+            <li className="rounded border border-gray-300 bg-navitem p-2 text-sm">Item 2</li>
           </ul>
         </aside>
         <main className="flex-1 overflow-auto p-4">
@@ -156,7 +156,7 @@ function App() {
       )}
       </main>
       </div>
-      <footer className="bg-gray-200 border-t border-gray-400 p-2 text-sm">Statusleiste</footer>
+      <footer className="bg-menu border-t border-gray-400 p-2 text-sm">Statusleiste</footer>
     </div>
   );
 }
