@@ -1,44 +1,103 @@
 import { useState } from 'react';
 import {
   BrowserRouter as Router,
-  Routes,
-  Route,
   NavLink,
   useLocation,
+  Routes,
+  Route,
 } from 'react-router-dom';
 import './index.css';
 import NavBar from './NavBar';
+import { ImporterProvider } from './context/ImporterContext';
+import NavItem from './components/NavItem';
+import type { ReactElement } from 'react';
+// Seiten-Komponenten importieren
+import HomePage from './pages/HomePage';
 import ImportOverviewPage from './pages/ImportOverviewPage';
 import ImportPage from './pages/ImportPage';
 import MappingPage from './pages/MappingPage';
 import TransformPage from './pages/TransformPage';
 import UploadPage from './pages/UploadPage';
 import OnlineCheckPage from './pages/OnlineCheckPage';
+import ImportStatusPage from './pages/ImportStatusPage';
 import DataOverviewPage from './pages/DataOverviewPage';
 import DataSourcesPage from './pages/DataSourcesPage';
 import DataCleanupPage from './pages/DataCleanupPage';
-import { ImporterProvider } from './context/ImporterContext';
+
+// Typdefinition für Menüeinträge
+interface MenuRoute {
+  to: string;
+  label: string;
+  element: ReactElement;
+  end?: boolean;
+}
+interface MenuGroup {
+  label: string;
+  children: MenuItem[];
+}
+type MenuItem = MenuRoute | MenuGroup;
+
+// Verschachtelte Menü-Konfiguration inkl. Routing-Komponenten
+const menuConfig: MenuItem[] = [
+  {
+    to: '/',
+    label: 'Home',
+    element: <HomePage />,
+    end: true,
+  },
+  {
+    label: 'Data',
+    children: [
+      { to: '/data', label: 'Übersicht', element: <DataOverviewPage />, end: true },
+      { to: '/data/sources', label: 'Quellen', element: <DataSourcesPage /> },
+      { to: '/data/cleanup', label: 'Cleanup', element: <DataCleanupPage /> },
+    ],
+  },
+  {
+    label: 'Import',
+    children: [
+      { to: '/imports', label: 'Übersicht', element: <ImportOverviewPage />, end: true },
+      { to: '/imports/import', label: 'Import', element: <ImportPage /> },
+      { to: '/imports/mapping', label: 'Mapping', element: <MappingPage /> },
+      { to: '/imports/transform', label: 'Transform', element: <TransformPage /> },
+      { to: '/imports/upload', label: 'Upload', element: <UploadPage /> },
+      { to: '/imports/online-check', label: 'Online Check', element: <OnlineCheckPage /> },
+      { to: '/imports/status', label: 'Status', element: <ImportStatusPage /> },
+    ],
+  },
+];
+
+// Rekursive Hilfsfunktion für Menü-Rendering
+function renderMenu(items: MenuItem[], currentPath: string): React.ReactElement[] {
+  return items.flatMap(item => {
+    if ('children' in item) {
+      // Zeige nur das passende Submenü an
+      const isActive = item.children.some(child => 'to' in child && currentPath.startsWith(child.to));
+      return isActive ? renderMenu(item.children, currentPath) : [];
+    }
+    return [
+      <li className="flex text-nowrap" key={item.to}>
+        <NavItem to={item.to} {...(item.end ? { end: true } : {})}>
+          {item.label}
+        </NavItem>
+      </li>
+    ];
+  });
+}
+
+// Rekursive Hilfsfunktion für Routing
+function renderRoutes(items: MenuItem[]): React.ReactElement[] {
+  return items.flatMap(item => {
+    if ('children' in item) return renderRoutes(item.children);
+    return [
+      <Route key={item.to} path={item.to} element={item.element} index={!!item.end} />
+    ];
+  });
+}
 
 function Layout() {
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-  const isData = location.pathname.startsWith('/data');
-
-  const menuItems = isData
-    ? [
-        { to: '/data', label: 'Übersicht', end: true },
-        { to: '/data/sources', label: 'Quellen' },
-        { to: '/data/cleanup', label: 'Cleanup' },
-      ]
-    : [
-
-        { to: '/', label: 'Übersicht', end: true },
-        { to: '/import', label: 'Import' },
-        { to: '/mapping', label: 'Mapping' },
-        { to: '/transform', label: 'Transform' },
-        { to: '/upload', label: 'Upload' },
-        { to: '/online-check', label: 'Online Check' },
-      ];
 
   return (
     <div className="flex flex-col h-full">
@@ -49,41 +108,21 @@ function Layout() {
             collapsed ? 'w-0' : 'w-64'
           }`}
         >
-          <p className="font-semibold mb-2">{isData ? 'Data' : 'Import'}</p>
+          <p className="mb-2 font-semibold">
+            {/* Zeige aktiven Bereich an */}
+            {menuConfig.find(m => 'children' in m && m.children.some(child => 'to' in child && location.pathname.startsWith(child.to)))?.label }
+          </p>
           <ul className="space-y-2">
-            {menuItems.map(({ to, label, end }) => (
-              <li key={to}>
-                <NavLink
-                  to={to}
-                  {...(end ? { end: true } : {})}
-                  className={({ isActive }) =>
-                    `block rounded border border-gray-300 p-2 text-sm ${
-                      isActive ? 'bg-navitem' : 'bg-white'
-                    }`
-                  }
-                >
-                  {label}
-                </NavLink>
-              </li>
-            ))}
+            {renderMenu(menuConfig, location.pathname)}
           </ul>
         </aside>
-        <main className="flex-1 overflow-auto p-4">
+        <main className="flex-1 p-4 overflow-hidden">
           <Routes>
-            <Route path="/" element={<ImportOverviewPage />} />
-            <Route path="/import" element={<ImportPage />} />
-
-            <Route path="/mapping" element={<MappingPage />} />
-            <Route path="/transform" element={<TransformPage />} />
-            <Route path="/upload" element={<UploadPage />} />
-            <Route path="/online-check" element={<OnlineCheckPage />} />
-            <Route path="/data" element={<DataOverviewPage />} />
-            <Route path="/data/sources" element={<DataSourcesPage />} />
-            <Route path="/data/cleanup" element={<DataCleanupPage />} />
+            {renderRoutes(menuConfig)}
           </Routes>
         </main>
       </div>
-      <footer className="bg-menu border-t border-gray-400 p-2 text-sm">
+      <footer className="bg-menu p-2 border-gray-400 border-t text-sm">
         Statusleiste
       </footer>
     </div>
@@ -101,3 +140,5 @@ function App() {
 }
 
 export default App;
+
+// Hinweis: Die Navigation und das Routing werden jetzt komplett aus menuConfig generiert.

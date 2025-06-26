@@ -1,35 +1,37 @@
-import { NavLink } from 'react-router-dom';
+import NavItem from './components/NavItem';
 
 interface NavBarProps {
   onToggle: () => void;
 }
 
 function NavBar({ onToggle }: NavBarProps) {
-  const linkStyle = ({ isActive }: { isActive: boolean }) =>
-    `bg-navitem border border-gray-300 px-2 py-1 rounded ${isActive ? 'font-bold' : ''}`;
-
   return (
-    <nav className="bg-menu border-b border-gray-400 p-4">
+    <nav className="bg-menu p-4 border-gray-400 border-b">
       <ul className="flex items-center space-x-4">
         <li>
           <button
             type="button"
             onClick={onToggle}
-            className="bg-navitem border border-gray-300 px-2 py-1 rounded"
+            className="bg-navitem px-2 py-1 border border-gray-300 rounded"
           >
             ☰
           </button>
         </li>
-        <li className="font-semibold">Importer</li>
+        <li className="font-semibold">247 Group</li>
         <li>
-          <NavLink to="/" end className={linkStyle}>
-            Import
-          </NavLink>
+          <NavItem to="/" end>
+            Home
+          </NavItem>
         </li>
         <li>
-          <NavLink to="/data" className={linkStyle}>
+          <NavItem to="/imports">
+            Import
+          </NavItem>
+        </li>
+        <li>
+          <NavItem to="/data">
             Data
-          </NavLink>
+          </NavItem>
         </li>
 
       </ul>
